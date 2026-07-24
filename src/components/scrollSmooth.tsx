@@ -7,17 +7,12 @@ gsap.registerPlugin(ScrollTrigger)
 
 const ScrollSmoother = () => {
  useEffect(() => {
-    // Lenis create
     const lenis = new Lenis({
   lerp: 0.05,
-
   orientation: "vertical",
   gestureOrientation: "vertical",
-
   smoothWheel: true,
   wheelMultiplier: 1,
-
-  smoothTouch: true,
   touchMultiplier: 2
     })
 
