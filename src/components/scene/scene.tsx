@@ -1,101 +1,100 @@
 import { useScroll } from '@/context/contextApi'
 import { MeshReflectorMaterial, useAnimations, useGLTF, useTexture } from '@react-three/drei'
-import { extend, useFrame, useThree } from '@react-three/fiber'
-import React, { useEffect, useMemo, useRef } from 'react'
-import * as THREE from "three"
-import { Water, SkeletonUtils } from 'three-stdlib' // 👈 SkeletonUtils import kiya hai
+import { extend, useFrame } from '@react-three/fiber'
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
+import React, { useEffect, useMemo, useRef } from 'react'
 import { ScrollTrigger } from "gsap/all"
+import * as THREE from "three"
+import { SkeletonUtils, Water } from 'three-stdlib'
 
 extend({ Water })
+gsap.registerPlugin(useGSAP, ScrollTrigger)
+
+const FISH_MODEL_PATH = "/clown-5-v1-sky-blue.glb"
+const BUTTERFLY_MODEL_PATH = "/butterfly.glb"
+const WATER_TEXTURE_PATH = "/textures/water.jpeg"
 
 const Scene = () => {
-  const { scene, animations } = useGLTF("./clown-5-v1-sky-blue.glb", true)
-  const butterflyGLTF = useGLTF("./butterfly.glb", true)
-  
-  const { isScrolled } = useScroll();   
+  const { scene, animations } = useGLTF(FISH_MODEL_PATH, true)
+  const butterflyGLTF = useGLTF(BUTTERFLY_MODEL_PATH, true)
+  const [sourceNormalMap] = useTexture([WATER_TEXTURE_PATH])
+  const { isScrolled } = useScroll()
 
-  // 1. Properly Deep Clone Butterfly 2 Scene
   const butterfly2Scene = useMemo(() => {
-    return SkeletonUtils.clone(butterflyGLTF.scene);
-  }, [butterflyGLTF.scene]);
+    return SkeletonUtils.clone(butterflyGLTF.scene)
+  }, [butterflyGLTF.scene])
+  const normalMapRef = useRef<THREE.Texture | null>(null)
 
-  // Fish Animations
-  const { actions: fishActions } = useAnimations(animations, scene);
-  
-  // Butterfly Animations setup
-  const { actions: b1Actions } = useAnimations(butterflyGLTF.animations, butterflyGLTF.scene);
-  const { actions: b2Actions } = useAnimations(butterflyGLTF.animations, butterfly2Scene);
+  const normalMap = useMemo(() => {
+    const texture = sourceNormalMap.clone()
 
-  const model = useRef(scene)
-  const { camera, gl } = useThree()   
-  
-  gsap.registerPlugin(useGSAP())
-  gsap.registerPlugin(ScrollTrigger);
+    texture.flipY = false
+    texture.colorSpace = THREE.SRGBColorSpace
+    texture.wrapS = THREE.RepeatWrapping
+    texture.wrapT = THREE.RepeatWrapping
+    texture.repeat.set(8, 8)
+    texture.needsUpdate = true
 
-  const { contextSafe } = useGSAP()
+    return texture
+  }, [sourceNormalMap])
 
-  const [normalMap] = useTexture([
-    "/textures/water.jpeg",
-  ]).map((texture) => {
-    texture.flipY = false 
-    texture.colorSpace = THREE.SRGBColorSpace 
-    return texture  
-  })
-
-  normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping
-
-  useMemo(() => {
-    if (normalMap) {
-      normalMap.wrapS = THREE.RepeatWrapping;
-      normalMap.wrapT = THREE.RepeatWrapping;
-      normalMap.repeat.set(8, 8);
-    }
-  }, [normalMap]);
+  const { actions: fishActions } = useAnimations(animations, scene)
+  const { actions: b1Actions } = useAnimations(butterflyGLTF.animations, butterflyGLTF.scene)
+  const { actions: b2Actions } = useAnimations(butterflyGLTF.animations, butterfly2Scene)
 
   useEffect(() => {
-    camera.position.set(-4, 1, 0.4)
-    camera.rotation.set(0, Math.PI, 0)
-    gl.outputColorSpace = THREE.SRGBColorSpace
-  }, [camera, gl])   
-
-  // Fish Animation Play
-  useEffect(() => {
-    const action = fishActions["Fish|swim_B3"];
-    if (!action) return;
-
-    action.reset().setLoop(THREE.LoopRepeat, Infinity).fadeIn(0.5).play();
-    return () => { action.fadeOut(0.5); };
-  }, [fishActions]);
-
-  // BOTH Butterflies Flying Animation Playback
-  useEffect(() => {
-    const fly1 = b1Actions["flying"] || b1Actions[Object.keys(b1Actions)[0]];
-    const fly2 = b2Actions["flying"] || b2Actions[Object.keys(b2Actions)[0]];
-
-    if (fly1) fly1.reset().setLoop(THREE.LoopRepeat, Infinity).fadeIn(0.5).play();
-    if (fly2) fly2.reset().setLoop(THREE.LoopRepeat, Infinity).fadeIn(0.5).play();
+    normalMapRef.current = normalMap
 
     return () => {
-      if (fly1) fly1.fadeOut(0.5);
-      if (fly2) fly2.fadeOut(0.5);
-    };
-  }, [b1Actions, b2Actions]);
+      normalMapRef.current = null
+      normalMap.dispose()
+    }
+  }, [normalMap])
+
+  useEffect(() => {
+    const action = fishActions["Fish|swim_B3"]
+    if (!action) return
+
+    action.reset().setLoop(THREE.LoopRepeat, Infinity).fadeIn(0.5).play()
+    return () => {
+      action.fadeOut(0.5)
+    }
+  }, [fishActions])
+
+  useEffect(() => {
+    const fly1 = b1Actions["flying"] || b1Actions[Object.keys(b1Actions)[0]]
+    const fly2 = b2Actions["flying"] || b2Actions[Object.keys(b2Actions)[0]]
+
+    if (fly1) {
+      fly1.reset().setLoop(THREE.LoopRepeat, Infinity).fadeIn(0.5).play()
+    }
+
+    if (fly2) {
+      fly2.reset().setLoop(THREE.LoopRepeat, Infinity).fadeIn(0.5).play()
+    }
+
+    return () => {
+      if (fly1) {
+        fly1.fadeOut(0.5)
+      }
+
+      if (fly2) {
+        fly2.fadeOut(0.5)
+      }
+    }
+  }, [b1Actions, b2Actions])
 
   useFrame((_, delta) => {
-    if (normalMap) {
-      normalMap.offset.x += delta * 0.09;
-      normalMap.offset.y += delta * 0.08;
-    }
-  });
+    const texture = normalMapRef.current
+    if (!texture) return
 
-  const fish = model.current
+    texture.offset.x += delta * 0.09
+    texture.offset.y += delta * 0.08
+  })
 
-  const addGsap = contextSafe(() => {
-    if (!fish) return;
-
-    const tl = gsap.timeline({
+  useGSAP(() => {
+    const timeline = gsap.timeline({
       scrollTrigger: {
         trigger: "#section-1",
         endTrigger: "#section-8",
@@ -103,56 +102,49 @@ const Scene = () => {
         end: "bottom bottom",
         scrub: 1.2,
       },
-    });
+    })
 
-    tl.to(fish.position, { y: "-=20", ease: "power1.inOut" }, "step1")
-      .to(fish.rotation, { x: -Math.PI * 1.5, y: -Math.PI * 1.5, ease: "power1.inOut" }, "step1")
-      .to(fish.position, { y: "+=20", ease: "power1.inOut" }, "step2")
-      .to(fish.rotation, { x: 0, y: 0, z: 0, duration: 0.3, ease: "power2.out" }, "step2")
-      .to(fish.position, { x: "-=80", ease: "power1.inOut" }, "step3")
-      .to(fish.rotation, { x: 0, y: Math.PI / 2, z: 0, duration: 0.3, ease: "power2.out" }, "step3")
-      .to(fish.position, { x: "+=120", ease: "power1.inOut" }, "step4")
-      .to(fish.rotation, { y: -Math.PI / 2, duration: 0.3, ease: "power2.out" }, "step4")
-      .to(fish.position, { x: "-=100", ease: "power1.inOut" }, "step5")
-      .to(fish.rotation, { x: 0, y: Math.PI / 2, z: 0, duration: 0.3, ease: "power2.out" }, "step5")
-      .to(fish.position, { x: "+=100", ease: "power1.inOut" }, "step6")
-      .to(fish.rotation, { y: -Math.PI / 2, z: 0, duration: 0.3, ease: "power2.out" }, "step6")
-      .to(fish.position, { x: "-=100", ease: "power1.inOut" }, "step7")
-      .to(fish.rotation, { y: Math.PI / 2, duration: 0.3, ease: "power2.out" }, "step7")
-      .to(fish.position, { x: "+=64", y: "+=5", ease: "power1.inOut" }, "step8")
-      .to(fish.rotation, { x: 0, y: -Math.PI / 2, z: 0, duration: 0.3, ease: "power2.out" }, "step8");
-  });
-
-  useGSAP(() => {
-    addGsap()
-  }, [])
+    timeline
+      .to(scene.position, { y: "-=20", ease: "power1.inOut" }, "step1")
+      .to(scene.rotation, { x: -Math.PI * 1.5, y: -Math.PI * 1.5, ease: "power1.inOut" }, "step1")
+      .to(scene.position, { y: "+=20", ease: "power1.inOut" }, "step2")
+      .to(scene.rotation, { x: 0, y: 0, z: 0, duration: 0.3, ease: "power2.out" }, "step2")
+      .to(scene.position, { x: "-=80", ease: "power1.inOut" }, "step3")
+      .to(scene.rotation, { x: 0, y: Math.PI / 2, z: 0, duration: 0.3, ease: "power2.out" }, "step3")
+      .to(scene.position, { x: "+=120", ease: "power1.inOut" }, "step4")
+      .to(scene.rotation, { y: -Math.PI / 2, duration: 0.3, ease: "power2.out" }, "step4")
+      .to(scene.position, { x: "-=100", ease: "power1.inOut" }, "step5")
+      .to(scene.rotation, { x: 0, y: Math.PI / 2, z: 0, duration: 0.3, ease: "power2.out" }, "step5")
+      .to(scene.position, { x: "+=100", ease: "power1.inOut" }, "step6")
+      .to(scene.rotation, { y: -Math.PI / 2, z: 0, duration: 0.3, ease: "power2.out" }, "step6")
+      .to(scene.position, { x: "-=100", ease: "power1.inOut" }, "step7")
+      .to(scene.rotation, { y: Math.PI / 2, duration: 0.3, ease: "power2.out" }, "step7")
+      .to(scene.position, { x: "+=64", y: "+=5", ease: "power1.inOut" }, "step8")
+      .to(scene.rotation, { x: 0, y: -Math.PI / 2, z: 0, duration: 0.3, ease: "power2.out" }, "step8")
+  }, { dependencies: [scene], revertOnUpdate: true })
 
   return (
     <>
       <primitive object={scene} scale={150} position={[-7, 0, 27]} rotation={[0, Math.PI / 2, 0]} />
 
-      {/* BUTTERFLIES */}
       {!isScrolled && (
         <>
-          {/* Butterfly 1 (Right & High) */}
-          <primitive 
-            object={butterflyGLTF.scene} 
-            scale={2.3} 
-            position={[12, 3, 30]} 
-            rotation={[0, -Math.PI / 2, 0]} 
+          <primitive
+            object={butterflyGLTF.scene}
+            scale={2.3}
+            position={[12, 3, 30]}
+            rotation={[0, -Math.PI / 2, 0]}
           />
 
-          {/* Butterfly 2 (Left & Low) */}
-          <primitive 
-            object={butterfly2Scene} 
-            scale={2.4} 
-            position={[-20, -2, 30]} 
-            rotation={[0, -Math.PI / 2, 0]} 
+          <primitive
+            object={butterfly2Scene}
+            scale={2.4}
+            position={[-20, -2, 30]}
+            rotation={[0, -Math.PI / 2, 0]}
           />
         </>
       )}
 
-      {/* WATER SURFACE */}
       {!isScrolled && (
         <mesh
           rotation={[-Math.PI / 2, 0, 0]}
@@ -184,3 +176,7 @@ const Scene = () => {
 }
 
 export default Scene
+
+useGLTF.preload(FISH_MODEL_PATH)
+useGLTF.preload(BUTTERFLY_MODEL_PATH)
+useTexture.preload(WATER_TEXTURE_PATH)

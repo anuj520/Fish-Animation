@@ -24,3 +24,85 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.loader-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(circle at center, black 18%, transparent 76%);
+}
+
+.loader-orb {
+  animation: loader-float 11s ease-in-out infinite;
+}
+
+.loader-orb--delay {
+  animation-delay: -5.5s;
+}
+
+.loader-ring {
+  animation: loader-spin 9s linear infinite;
+}
+
+.loader-ring--reverse {
+  animation-direction: reverse;
+  animation-duration: 12s;
+}
+
+.loader-scan {
+  animation: loader-scan 3.8s linear infinite;
+}
+
+.loader-stage-active {
+  animation: loader-stage-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes loader-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(0, -20px, 0) scale(1.06);
+  }
+}
+
+@keyframes loader-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-scan {
+  from {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  15%,
+  85% {
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+@keyframes loader-stage-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(103 232 249 / 0);
+  }
+
+  50% {
+    box-shadow: 0 0 0 1px rgb(103 232 249 / 0.18);
+  }
+}
