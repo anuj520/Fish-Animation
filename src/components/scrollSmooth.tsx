@@ -1,38 +1,43 @@
-import Lenis from "lenis"
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { useEffect } from "react"
+"use client";
 
-gsap.registerPlugin(ScrollTrigger)
+import React, { useEffect } from "react";
+import Lenis from "lenis";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const ScrollSmoother = () => {
- useEffect(() => {
-    const lenis = new Lenis({
-  lerp: 0.05,
-  orientation: "vertical",
-  gestureOrientation: "vertical",
-  smoothWheel: true,
-  wheelMultiplier: 1,
-  touchMultiplier: 2
-    })
-
-    // Lenis scroll ko GSAP se sync karo
-    lenis.on("scroll", ScrollTrigger.update)
-
-    // GSAP ticker ke through Lenis run
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000)
-    })
-
-    // lag remove
-    gsap.ticker.lagSmoothing(0)
-
-    return () => {
-      lenis.destroy()
-    }
-  }, [])
-
-  return null
+interface SmoothScrollProps {
+  children?: React.ReactNode;
 }
 
-export default ScrollSmoother
+export default function SmoothScroll({ children }: SmoothScrollProps) {
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: "vertical",
+      gestureOrientation: "vertical",
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.8,
+    });
+
+    lenis.on("scroll", ScrollTrigger.update);
+
+    let rafId: number;
+    function raf(time: number) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    rafId = requestAnimationFrame(raf);
+
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+    };
+  }, []);
+
+  // Children pass through return hona mandatory hai
+  return <>{children}</>;
+}

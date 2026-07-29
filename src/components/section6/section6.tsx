@@ -15,7 +15,7 @@ return (
     fontUrl=""
     font="bold 30px Orbitron"
     scrollSpeed={2}
-/>s
+/>
 </div>
   )
 }
