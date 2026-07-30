@@ -29,7 +29,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-    <body suppressHydrationWarning className="min-h-full flex flex-col">
+    <body suppressHydrationWarning className="min-h-full flex flex-col overflow-x-hidden">
   {/* Self-closing component for Lenis initialization */}
   <SmoothScroll />
   

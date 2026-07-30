@@ -15,41 +15,84 @@ export default function StepsAndFeatures() {
   const stepsGridRef = useRef<HTMLDivElement>(null);
   const featuresGridRef = useRef<HTMLDivElement>(null);
 
+  // Helper: Text ko individual letters me convert karne ke liye
+  const splitTextToKineticLetters = (text: string) => {
+    return text.split("").map((char, index) => (
+      <span
+        key={index}
+        className="kinetic-letter inline-block will-change-transform origin-bottom"
+        style={{ whiteSpace: char === " " ? "pre" : "normal" }}
+      >
+        {char}
+      </span>
+    ));
+  };
+
   useGSAP(
     () => {
       if (!containerRef.current) return;
 
-      // 1. Step Cards Reveal & Floating Parallax Animation
+      // 1. Step Cards & Heading Letter Animations
       if (stepsGridRef.current) {
         const stepCards = gsap.utils.toArray<HTMLElement>(
           stepsGridRef.current.children
         );
 
-        // Smooth staggered entry on scroll
-        gsap.fromTo(
-          stepCards,
-          {
-            y: 80,
-            opacity: 0,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            stagger: 0.15,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: stepsGridRef.current,
-              start: "top 85%",
-              end: "top 30%",
-              scrub: 1, // Smooth scrub interaction
-            },
-          }
-        );
+        stepCards.forEach((card, index) => {
+          const letters = card.querySelectorAll(".kinetic-letter");
 
-        // Subtle internal elements subtle float on scroll
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: card,
+              start: "top 88%",
+              end: "top 45%",
+              scrub: 1.2,
+            },
+          });
+
+          // Card Box Reveal
+          tl.fromTo(
+            card,
+            {
+              y: 80,
+              opacity: 0,
+              scale: 0.92,
+              rotateX: 10,
+              transformPerspective: 1000,
+            },
+            {
+              y: 0,
+              opacity: 1,
+              scale: 1,
+              rotateX: 0,
+              ease: "power3.out",
+            },
+            0
+          )
+          // Text Letter-by-Letter Wave
+          .fromTo(
+            letters,
+            {
+              opacity: 0,
+              y: 25,
+              rotateX: -80,
+              filter: "blur(8px)",
+            },
+            {
+              opacity: 1,
+              y: 0,
+              rotateX: 0,
+              filter: "blur(0px)",
+              stagger: 0.02,
+              ease: "back.out(1.7)",
+            },
+            0.1
+          );
+        });
+
+        // Inner Mockup Parallax Shift
         gsap.to(".inner-parallax-item", {
-          y: -15,
+          y: -20,
           ease: "none",
           scrollTrigger: {
             trigger: stepsGridRef.current,
@@ -60,33 +103,57 @@ export default function StepsAndFeatures() {
         });
       }
 
-      // 2. Feature Cards Entrance & Elevation Animation
+      // 2. Feature Cards Entrance & Text Reveal Animation
       if (featuresGridRef.current) {
         const featureCards = gsap.utils.toArray<HTMLElement>(
           featuresGridRef.current.children
         );
 
-        gsap.fromTo(
-          featureCards,
-          {
-            y: 100,
-            scale: 0.95,
-            opacity: 0,
-          },
-          {
-            y: 0,
-            scale: 1,
-            opacity: 1,
-            stagger: 0.2,
-            ease: "power2.out",
+        featureCards.forEach((card) => {
+          const letters = card.querySelectorAll(".kinetic-letter");
+
+          const tl = gsap.timeline({
             scrollTrigger: {
-              trigger: featuresGridRef.current,
+              trigger: card,
               start: "top 85%",
               end: "top 40%",
-              scrub: 1.2,
+              scrub: 1,
             },
-          }
-        );
+          });
+
+          tl.fromTo(
+            card,
+            {
+              y: 90,
+              scale: 0.94,
+              opacity: 0,
+            },
+            {
+              y: 0,
+              scale: 1,
+              opacity: 1,
+              ease: "power2.out",
+            },
+            0
+          ).fromTo(
+            letters,
+            {
+              opacity: 0,
+              y: 20,
+              scale: 0.8,
+              filter: "blur(6px)",
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              filter: "blur(0px)",
+              stagger: 0.02,
+              ease: "power3.out",
+            },
+            0.1
+          );
+        });
       }
     },
     { scope: containerRef }
@@ -106,8 +173,8 @@ export default function StepsAndFeatures() {
         {/* Step 1 */}
         <div className="flex flex-col rounded-3xl bg-[#09051d]/60 backdrop-blur-xl border border-white/10 p-8 shadow-2xl hover:border-white/20 transition-colors duration-300 will-change-transform">
           <span className="text-sm font-medium text-gray-400">Step 1</span>
-          <h2 className="text-2xl sm:text-3xl font-semibold mt-1 mb-8 tracking-tight">
-            Tell us About Yourself
+          <h2 className="text-2xl sm:text-3xl font-semibold mt-1 mb-8 tracking-tight [perspective:800px]">
+            {splitTextToKineticLetters("Tell us About Yourself")}
           </h2>
 
           <div className="grid grid-cols-2 gap-3 mt-auto inner-parallax-item">
@@ -153,8 +220,8 @@ export default function StepsAndFeatures() {
         {/* Step 2 */}
         <div className="flex flex-col rounded-3xl bg-[#09051d]/60 backdrop-blur-xl border border-white/10 p-8 shadow-2xl hover:border-white/20 transition-colors duration-300 will-change-transform">
           <span className="text-sm font-medium text-gray-400">Step 2</span>
-          <h2 className="text-2xl sm:text-3xl font-semibold mt-1 mb-8 tracking-tight">
-            Pick Your Theme
+          <h2 className="text-2xl sm:text-3xl font-semibold mt-1 mb-8 tracking-tight [perspective:800px]">
+            {splitTextToKineticLetters("Pick Your Theme")}
           </h2>
 
           <div className="flex flex-col gap-4 my-auto inner-parallax-item">
@@ -178,8 +245,8 @@ export default function StepsAndFeatures() {
         {/* Step 3 */}
         <div className="flex flex-col rounded-3xl bg-[#09051d]/60 backdrop-blur-xl border border-white/10 p-8 shadow-2xl hover:border-white/20 transition-colors duration-300 will-change-transform">
           <span className="text-sm font-medium text-gray-400">Step 3</span>
-          <h2 className="text-2xl sm:text-3xl font-semibold mt-1 mb-8 tracking-tight">
-            Edit & Launch
+          <h2 className="text-2xl sm:text-3xl font-semibold mt-1 mb-8 tracking-tight [perspective:800px]">
+            {splitTextToKineticLetters("Edit & Launch")}
           </h2>
 
           <div className="relative w-full rounded-2xl overflow-hidden border border-cyan-500/30 bg-[#030614] p-4 flex flex-col justify-between aspect-[4/5] shadow-inner mt-auto inner-parallax-item">
@@ -231,8 +298,8 @@ export default function StepsAndFeatures() {
             <span className="text-xs font-medium text-white/80 uppercase tracking-wide">
               Award Winning
             </span>
-            <h3 className="text-3xl sm:text-4xl font-semibold mt-2 mb-4 leading-tight">
-              4x No-Code Site <br /> of the Month
+            <h3 className="text-3xl sm:text-4xl font-semibold mt-2 mb-4 leading-tight [perspective:800px]">
+              {splitTextToKineticLetters("4x No-Code Site of the Month")}
             </h3>
             <p className="text-sm text-white/80 font-normal">
               Beating Wix, Webflow and Wordpress.
@@ -258,8 +325,8 @@ export default function StepsAndFeatures() {
             <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
               Trend Setting
             </span>
-            <h3 className="text-3xl sm:text-4xl font-semibold mt-2 mb-4 leading-tight">
-              Top Web Design <br /> Trend 2025
+            <h3 className="text-3xl sm:text-4xl font-semibold mt-2 mb-4 leading-tight [perspective:800px]">
+              {splitTextToKineticLetters("Top Web Design Trend 2025")}
             </h3>
             <p className="text-sm text-gray-300 font-normal">
               Muzli claims Interactive 3D elements are transforming web design.
@@ -285,8 +352,8 @@ export default function StepsAndFeatures() {
             <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
               Scalable
             </span>
-            <h3 className="text-3xl sm:text-4xl font-semibold mt-2 mb-4 leading-tight">
-              Trusted by <br /> the Best
+            <h3 className="text-3xl sm:text-4xl font-semibold mt-2 mb-4 leading-tight [perspective:800px]">
+              {splitTextToKineticLetters("Trusted by the Best")}
             </h3>
             <p className="text-sm text-gray-300 font-normal">
               Join designers and agencies behind The Simpsons, Futurama and
