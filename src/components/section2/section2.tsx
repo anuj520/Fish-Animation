@@ -18,51 +18,50 @@ export default function Section2() {
     () => {
       if (!sectionRef.current || !overlayRef.current || !cardRef.current) return;
 
-      // Master ScrollTrigger Timeline
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top top",      // Pin starts when section hits top of viewport
-          end: "+=120%",         // Scroll length for the pinned animation
-          scrub: 1.5,            // Smooth, luxurious inertia on scroll
-          pin: true,             // Pins the section for full control
-          anticipatePin: 1,
+          start: "top 67%",     // Scroll start hote hi overlay transition shuru hoga
+          end: "top 50%",       // Lambe scroll distance par dhere-dhere black me convert hoga
+          scrub: 1.5,           // Extra smooth scroll response
         },
       });
 
-      // 1. Smooth background transition (Glass Blue -> Solid Black)
-      tl.to(
+      // 1. Transparent to Pure Solid Black Smooth Transition
+      tl.fromTo(
         overlayRef.current,
         {
-          backgroundColor: "rgba(0, 0, 0, 1)",
-          backdropFilter: "blur(0px)",
-          WebkitBackdropFilter: "blur(0px)",
-          ease: "power2.inOut",
+          backgroundColor: "rgba(0, 0, 0, 0)", // Start: Completely Transparent
+        },
+        {
+          backgroundColor: "rgba(0, 0, 0, 1)", // End: Pure Solid Black
+          ease: "power1.inOut",
         },
         0
-      )
-      // 2. Central Card Zoom & Elevation
-      .fromTo(
+      );
+
+      // 2. Card Elevation & Scale Up Effect
+      tl.fromTo(
         cardRef.current,
         {
-          scale: 0.82,
+          scale: 0.85,
+          y: 50,
           borderRadius: "2rem",
-          boxShadow: "0px 20px 50px rgba(0, 0, 0, 0.3)",
         },
         {
           scale: 1,
+          y: 0,
           borderRadius: "1rem",
-          boxShadow: "0px 40px 100px rgba(0, 0, 0, 0.8)",
           ease: "power2.out",
         },
         0
       );
 
-      // 3. Parallax / Subtle Zoom on inner image for high-end depth
+      // 3. Inner Image Zoom
       if (imageRef.current) {
         tl.fromTo(
           imageRef.current,
-          { scale: 1.25 },
+          { scale: 1.2 },
           { scale: 1.0, ease: "power1.out" },
           0
         );
@@ -72,23 +71,22 @@ export default function Section2() {
   );
 
   return (
-    <main id="section-2" ref={sectionRef} className="relative w-full h-screen overflow-hidden bg-slate-900">
-      {/* Background Overlay (Glass-blue to solid black transition) */}
+    <main
+      id="section-2"
+      ref={sectionRef}
+      className="relative w-full h-screen overflow-hidden bg-transparent"
+    >
+      {/* Starting me fully Transparent Overlay, scroll par dhire-dhire Black convert hoga */}
       <div
         ref={overlayRef}
-        className="absolute inset-0 z-10 w-full h-full pointer-events-none"
-        style={{
-          backgroundColor: "rgba(65, 146, 203, 0.9)",
-          backdropFilter: "blur(23px)",
-          WebkitBackdropFilter: "blur(23px)",
-        }}
+        className="absolute inset-0 z-10 w-full h-full pointer-events-none will-change-colors"
       />
 
-      {/* Floating Center Content Container */}
+      {/* Floating Center Card */}
       <div className="relative z-20 w-full h-full flex items-center justify-center p-6">
         <div
           ref={cardRef}
-          className="relative h-[85vh] w-[90vw] max-w-6xl overflow-hidden border border-white/20 will-change-transform"
+          className="relative h-[85vh] w-[90vw] max-w-6xl overflow-hidden border border-white/20 will-change-transform shadow-2xl"
         >
           <Image
             ref={imageRef}
@@ -98,7 +96,7 @@ export default function Section2() {
             priority
             className="object-cover object-center transform will-change-transform"
           />
-          {/* Subtle vignette/overlay for cinematic tone */}
+          {/* Subtle Inner Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
         </div>
       </div>

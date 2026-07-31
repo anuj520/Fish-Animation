@@ -1,96 +1,118 @@
 "use client";
 
 import React, { useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, MessageSquare } from "lucide-react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 
-export default function HeroSection() {
+export default function Section1() {
   gsap.registerPlugin(ScrollTrigger);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const heroContentRef = useRef<HTMLDivElement>(null);
   const secondBoxRef = useRef<HTMLDivElement>(null);
+  const darkOverlayRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      if (!heroContentRef.current || !secondBoxRef.current || !containerRef.current) return;
+      if (
+        !heroContentRef.current ||
+        !secondBoxRef.current ||
+        !containerRef.current ||
+        !darkOverlayRef.current
+      )
+        return;
 
-      // Single Master Timeline: Triggered Jab Scroll Bottom Box Par Aaye
+      // Master Timeline linked to the trigger
       const mainTl = gsap.timeline({
         scrollTrigger: {
           trigger: secondBoxRef.current,
-          start: "top 80%", // Jab bottom box viewport me 80% par aaye
-          end: "top 20%",   // Full completion point
-          scrub: 1,         // Smooth scroll-synced animation
+          start: "center center", // Trigger right before entering viewport
+          end: "center 10%",   // Gives long room for buttery smooth transition
+          scrub: 1.5,       // Smooth inertia lag
         },
       });
 
-      // 1. Parent Container Theme / Background Change
+      // 1. Smooth Dark Overlay Fade-In (Replaces sudden color switch)
       mainTl.to(
-        containerRef.current,
+        darkOverlayRef.current,
         {
-          backgroundColor: "#000000",
-          ease: "power2.out",
+          opacity: 1,
+          ease: "power1.inOut",
         },
         0
       );
 
-      // 2. Initial Hero Content Fade, Blur & Scale Out
+      // 2. Initial Hero Content Fade, Blur & Shift Up
       mainTl.to(
         heroContentRef.current,
         {
-          filter: "blur(16px)",
+          filter: "blur(12px)",
           opacity: 0,
-          y: -50,
-          scale: 0.95,
+          y: -60,
+          scale: 0.96,
           ease: "power2.out",
         },
         0
       );
 
-      // 3. Second Box Entrance (Scale up, Blur & Fade In)
+      // 3. Second Box Entrance (Scale up & Fade In smoothly)
       mainTl.fromTo(
         secondBoxRef.current,
         {
           opacity: 0,
-          scale: 0.9,
-          y: 30,
-          backdropFilter: "blur(0px)",
+          scale: 0.92,
+          y: 40,
         },
         {
           opacity: 1,
           scale: 1,
           y: 0,
-          backdropFilter: "blur(24px)",
           ease: "power2.out",
         },
-        0
+        0.2 // Slight delay for overlap separation
       );
     },
     { scope: containerRef }
   );
 
   return (
-    <main id="section-1" ref={containerRef} className="bg-[#4192CB] transition-colors duration-300" >
-      <div className="relative min-h-[150vh] w-full font-sans text-white">
+    <main
+      id="section-1"
+      ref={containerRef}
+      className="relative  w-full min-h-[160vh]"
+    >
+      {/* SMOOTH BLACK OVERLAY LAYER */}
+      <div
+        ref={darkOverlayRef}
+        className="pointer-events-none absolute inset-0 z-0 bg-black opacity-0 will-change-opacity"
+      />
+
+      <div className="relative z-10 w-full font-sans text-white">
         {/* 1. FIXED HEADER */}
         <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-2xl font-bold tracking-tight"
-          >
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-tr from-pink-500 via-purple-500 to-indigo-400">
-              <span className="h-2 w-2 rounded-full bg-white/80" />
-            </span>
-            <span className="text-white tracking-wide">Academy X</span>
-          </Link>
+      <Link
+  href="/"
+  className="flex items-center gap-2.5 text-2xl font-bold tracking-tight group"
+>
+  <div className="relative w-9 h-9 flex-shrink-0">
+    <Image
+      src="/images/logo.png"
+      alt="Academy X Logo"
+      fill
+      priority
+      sizes="36px"
+      className="object-contain"
+    />
+  </div>
+  <span className="text-white tracking-wide transition-opacity group-hover:opacity-90">
+    Academy X
+  </span>
+</Link>
 
-          {/* Center Pill Nav */}
           <nav className="hidden md:flex items-center gap-6 rounded-full bg-white/10 px-6 py-2.5 backdrop-blur-md border border-white/15 text-sm font-medium shadow-lg">
             <button className="flex items-center gap-1 hover:text-gray-200 transition">
               Product <ChevronDown className="w-4 h-4 opacity-70" />
@@ -106,7 +128,6 @@ export default function HeroSection() {
             </Link>
           </nav>
 
-          {/* Right Actions */}
           <div className="flex items-center gap-4 text-sm font-medium">
             <Link
               href="/login"
@@ -126,30 +147,20 @@ export default function HeroSection() {
           </div>
         </header>
 
-        {/* 3. FIXED BOTTOM-LEFT FLOATING WIDGET */}
+        {/* FLOATING WIDGETS */}
         <div className="fixed bottom-6 left-6 z-50">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white font-bold text-xs shadow-lg hover:scale-105 transition cursor-pointer">
             N
           </div>
         </div>
 
-        {/* 4. FIXED BOTTOM-RIGHT FLOATING WIDGET */}
-        <div className="fixed bottom-6 right-8 flex flex-col items-end gap-4 z-50">
-          <button className="flex items-center gap-2 rounded-full bg-black px-4 py-2.5 text-xs font-medium shadow-xl hover:bg-gray-900 transition border border-white/10">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500">
-              <MessageSquare className="w-3.5 h-3.5 text-black fill-current" />
-            </span>
-            Need help?
-          </button>
-        </div>
-
-        {/* 5. MAIN HERO CONTENT AREA */}
+        {/* HERO MAIN CONTENT */}
         <main
           ref={heroContentRef}
-          className="relative z-10 h-screen max-w-7xl mx-auto  pb-5 flex flex-col justify-end"
+          className="relative z-10 h-screen max-w-7xl mx-auto px-8 pb-12 flex flex-col justify-end will-change-transform"
         >
           <div className="max-w-2xl space-y-5 mb-8">
-            <h1 className="text-6xl sm:text-7xl  leading-[1.1] tracking-tight">
+            <h1 className="text-6xl sm:text-7xl leading-[1.1] tracking-tight">
               3D Websites <br />
               in Minutes
             </h1>
@@ -157,7 +168,7 @@ export default function HeroSection() {
               No-Code Builder for WebGL 3D Websites
             </p>
             <div className="flex items-center gap-4 pt-2">
-              <button className="rounded-full px-6 py-3 text-sm font-medium border border-white  hover:bg-white/25 transition">
+              <button className="rounded-full px-6 py-3 text-sm font-medium border border-white hover:bg-white/25 transition">
                 Talk to Us
               </button>
               <Link
@@ -170,12 +181,12 @@ export default function HeroSection() {
           </div>
         </main>
 
-        {/* 6. SECOND BOX */}
-        <div className="relative z-10 h-[50vh] flex items-center justify-center">
-          <div
-            ref={secondBoxRef}
-            className="relative flex items-end justify-end w-full h-full overflow-hidden"
-          >
+        {/* SECOND BOX */}
+        <div
+          ref={secondBoxRef}
+          className="relative z-10 h-[60vh] flex items-center justify-center will-change-transform"
+        >
+          <div className="relative flex items-end justify-end w-full h-full overflow-hidden">
             <div className="relative z-10 max-w-7xl mx-auto w-full px-8 sm:px-12 md:px-16 pb-12">
               <div className="max-w-xl space-y-6">
                 <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-white leading-[1.1]">

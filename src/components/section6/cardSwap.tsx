@@ -574,51 +574,51 @@ class App {
   ) {
     const defaultItems = [
       {
-        image: `https://picsum.photos/seed/1/800/600?grayscale`,
+        image: "/images/herotexture.jpg.jpeg",
         text: 'Bridge'
       },
       {
-        image: `https://picsum.photos/seed/2/800/600?grayscale`,
+        image: "/images/herotexture.jpg.jpeg",
         text: 'Desk Setup'
       },
       {
-        image: `https://picsum.photos/seed/3/800/600?grayscale`,
+        image: "/images/herotexture.jpg.jpeg",
         text: 'Waterfall'
       },
       {
-        image: `https://picsum.photos/seed/4/800/600?grayscale`,
+        image: "/images/herotexture.jpg.jpeg",
         text: 'Strawberries'
       },
       {
-        image: `https://picsum.photos/seed/5/800/600?grayscale`,
+        image: "/images/herotexture.jpg.jpeg",
         text: 'Deep Diving'
       },
       {
-        image: `https://picsum.photos/seed/16/800/600?grayscale`,
+        image: "/images/herotexture.jpg.jpeg",
         text: 'Train Track'
       },
       {
-        image: `https://picsum.photos/seed/17/800/600?grayscale`,
+        image: "/images/herotexture.jpg.jpeg",
         text: 'Santorini'
       },
       {
-        image: `https://picsum.photos/seed/8/800/600?grayscale`,
+        image: "/images/herotexture.jpg.jpeg",
         text: 'Blurry Lights'
       },
       {
-        image: `https://picsum.photos/seed/9/800/600?grayscale`,
+        image: "/images/herotexture.jpg.jpeg",
         text: 'New York'
       },
       {
-        image: `https://picsum.photos/seed/10/800/600?grayscale`,
+        image: "/images/herotexture.jpg.jpeg",
         text: 'Good Boy'
       },
       {
-        image: `https://picsum.photos/seed/21/800/600?grayscale`,
+        image: "/images/herotexture.jpg.jpeg",
         text: 'Coastline'
       },
       {
-        image: `https://picsum.photos/seed/12/800/600?grayscale`,
+        image: "/images/herotexture.jpg.jpeg",
         text: 'Palm Trees'
       }
     ];
