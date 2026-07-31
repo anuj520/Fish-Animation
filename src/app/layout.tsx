@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Academy X",
-  description: "Create 3d website",
+  description: "Create 3D website",
 };
 
 export default function RootLayout({
