@@ -1,3 +1,5 @@
+"use client";
+
 import { useScroll } from '@/context/contextApi'
 import { MeshReflectorMaterial, useAnimations, useGLTF, useTexture } from '@react-three/drei'
 import { extend, useFrame } from '@react-three/fiber'
@@ -14,16 +16,19 @@ gsap.registerPlugin(useGSAP, ScrollTrigger)
 const FISH_MODEL_PATH = "/clown-5-v1-sky-blue.glb"
 const BUTTERFLY_MODEL_PATH = "/butterfly.glb"
 const WATER_TEXTURE_PATH = "/textures/water.jpeg"
+const wallpaper = "/images/herotexture.jpg.jpeg"
 
 const Scene = () => {
   const { scene, animations } = useGLTF(FISH_MODEL_PATH, true)
   const butterflyGLTF = useGLTF(BUTTERFLY_MODEL_PATH, true)
   const [sourceNormalMap] = useTexture([WATER_TEXTURE_PATH])
+  const [wallpaperMap] = useTexture([wallpaper]) // Fixed: Array destructuring index match
   const { isScrolled } = useScroll()
 
   const butterfly2Scene = useMemo(() => {
     return SkeletonUtils.clone(butterflyGLTF.scene)
   }, [butterflyGLTF.scene])
+  
   const normalMapRef = useRef<THREE.Texture | null>(null)
 
   const normalMap = useMemo(() => {
@@ -38,6 +43,17 @@ const Scene = () => {
 
     return texture
   }, [sourceNormalMap])
+
+  // Configured Wallpaper Texture Map
+  const textureWallpaper = useMemo(() => {
+    const tex = wallpaperMap.clone()
+    tex.flipY = true
+    tex.colorSpace = THREE.SRGBColorSpace
+    tex.wrapS = THREE.RepeatWrapping
+    tex.wrapT = THREE.RepeatWrapping
+    tex.needsUpdate = true
+    return tex
+  }, [wallpaperMap])
 
   const { actions: fishActions } = useAnimations(animations, scene)
   const { actions: b1Actions } = useAnimations(butterflyGLTF.animations, butterflyGLTF.scene)
@@ -66,22 +82,12 @@ const Scene = () => {
     const fly1 = b1Actions["flying"] || b1Actions[Object.keys(b1Actions)[0]]
     const fly2 = b2Actions["flying"] || b2Actions[Object.keys(b2Actions)[0]]
 
-    if (fly1) {
-      fly1.reset().setLoop(THREE.LoopRepeat, Infinity).fadeIn(0.5).play()
-    }
-
-    if (fly2) {
-      fly2.reset().setLoop(THREE.LoopRepeat, Infinity).fadeIn(0.5).play()
-    }
+    if (fly1) fly1.reset().setLoop(THREE.LoopRepeat, Infinity).fadeIn(0.5).play()
+    if (fly2) fly2.reset().setLoop(THREE.LoopRepeat, Infinity).fadeIn(0.5).play()
 
     return () => {
-      if (fly1) {
-        fly1.fadeOut(0.5)
-      }
-
-      if (fly2) {
-        fly2.fadeOut(0.5)
-      }
+      if (fly1) fly1.fadeOut(0.5)
+      if (fly2) fly2.fadeOut(0.5)
     }
   }, [b1Actions, b2Actions])
 
@@ -97,7 +103,7 @@ const Scene = () => {
     const timeline = gsap.timeline({
       scrollTrigger: {
         trigger: "#section-1",
-        endTrigger: "#section-8",
+        endTrigger: "#section-9",
         start: "top top",
         end: "bottom bottom",
         scrub: 1.2,
@@ -120,7 +126,8 @@ const Scene = () => {
       .to(scene.position, { x: "-=100", ease: "power1.inOut" }, "step7")
       .to(scene.rotation, { y: Math.PI / 2, duration: 0.3, ease: "power2.out" }, "step7")
       .to(scene.position, { x: "+=64", y: "+=5", ease: "power1.inOut" }, "step8")
-      .to(scene.rotation, { x: 0, y: -Math.PI / 2, z: 0, duration: 0.3, ease: "power2.out" }, "step8")
+      .to(scene.rotation, { x: 0, y: Math.PI, z: 0, duration: 0.3, ease: "power2.out" }, "step8")
+      .to(scene.rotation, { x: 0, y: -Math.PI/49, z: 0, duration: 0.3, ease: "power2.out" }, "step9")
   }, { dependencies: [scene], revertOnUpdate: true })
 
   return (
@@ -145,32 +152,49 @@ const Scene = () => {
         </>
       )}
 
-      {!isScrolled && (
-        <mesh
-          rotation={[-Math.PI / 2, 0, 0]}
-          position={[0, -5, 0]}
-          receiveShadow
-        >
-          <planeGeometry args={[120, 120]} />
-          <MeshReflectorMaterial
-            normalMap={normalMap}
-            normalScale={new THREE.Vector2(0.35, 0.35)}
-            blur={[400, 150]}
-            resolution={1024}
-            mirror={0.85}
-            mixBlur={0.7}
-            mixStrength={3.5}
-            roughness={0.1}
-            depthScale={1.5}
-            minDepthThreshold={0.2}
-            maxDepthThreshold={1.2}
-            depthToBlurRatioBias={0.25}
-            color="#fff"
-            metalness={0.15}
-            distortion={0.4}
-          />
-        </mesh>
-      )}
+     {!isScrolled && (
+  <group>
+    {/* FIXED WALLPAPER CARD MESH */}
+    <mesh
+      position={[-3, 8, 30]}          
+      rotation={[0, 0, 0]}          
+      receiveShadow
+    >
+      <planeGeometry args={[53, 28]} /> {/* Aspect Ratio fixed for Card Frame */}
+      <meshBasicMaterial 
+        map={textureWallpaper} 
+        side={THREE.DoubleSide} 
+        transparent={true}
+      />  
+    </mesh>
+
+    {/* WATER REFLECTOR PLANE */}
+    <mesh
+      rotation={[-Math.PI / 2, 0, 0]}
+      position={[0, -5, 0]}
+      receiveShadow
+    >
+      <planeGeometry args={[120, 120]} />
+      <MeshReflectorMaterial
+        normalMap={normalMap}
+        normalScale={new THREE.Vector2(0.35, 0.35)}
+        blur={[400, 150]}
+        resolution={1024}
+        mirror={0.85}
+        mixBlur={0.7}
+        mixStrength={3.5}
+        roughness={0.1}
+        depthScale={1.5}
+        minDepthThreshold={0.2}
+        maxDepthThreshold={1.2}
+        depthToBlurRatioBias={0.25}
+        color="#79B8D6"
+        metalness={0.15}
+        distortion={0.4}
+      />
+    </mesh>
+  </group> 
+)}
     </>
   )
 }
@@ -180,3 +204,4 @@ export default Scene
 useGLTF.preload(FISH_MODEL_PATH)
 useGLTF.preload(BUTTERFLY_MODEL_PATH)
 useTexture.preload(WATER_TEXTURE_PATH)
+useTexture.preload(wallpaper)
