@@ -2,7 +2,7 @@
 
 import { useScroll } from '@/context/contextApi'
 import { MeshReflectorMaterial, useAnimations, useGLTF, useTexture } from '@react-three/drei'
-import { extend, useFrame } from '@react-three/fiber'
+import { extend, useFrame, useThree } from '@react-three/fiber'
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import React, { useEffect, useMemo, useRef } from 'react'
@@ -22,7 +22,8 @@ const Scene = () => {
   const { scene, animations } = useGLTF(FISH_MODEL_PATH, true)
   const butterflyGLTF = useGLTF(BUTTERFLY_MODEL_PATH, true)
   const [sourceNormalMap] = useTexture([WATER_TEXTURE_PATH])
-  const [wallpaperMap] = useTexture([wallpaper]) // Fixed: Array destructuring index match
+  const { size } = useThree();
+  const [wallpaperMap] = useTexture([wallpaper])
   const { isScrolled } = useScroll()
 
   const butterfly2Scene = useMemo(() => {
@@ -99,6 +100,12 @@ const Scene = () => {
     texture.offset.y += delta * 0.08
   })
 
+    const width = size.width;
+
+  // Responsive breakpoints
+  const isMobile = width <= 600;
+  const isTablet = width > 600 && width <= 1024;
+
   useGSAP(() => {
     const timeline = gsap.timeline({
       scrollTrigger: {
@@ -106,7 +113,7 @@ const Scene = () => {
         endTrigger: "#section-9",
         start: "top top",
         end: "bottom bottom",
-        scrub: 1.2,
+        scrub: 0.5,
       },
     })
 
@@ -125,78 +132,97 @@ const Scene = () => {
       .to(scene.rotation, { y: -Math.PI / 2, z: 0, duration: 0.3, ease: "power2.out" }, "step6")
       .to(scene.position, { x: "-=100", ease: "power1.inOut" }, "step7")
       .to(scene.rotation, { y: Math.PI / 2, duration: 0.3, ease: "power2.out" }, "step7")
-      .to(scene.position, { x: "+=64", y: "+=5", ease: "power1.inOut" }, "step8")
+      // Fixed Step 8 & 9: Cleaned relative calculations to direct landing alignment
+      .to(scene.position, { x: -4, y: 5, ease: "power1.inOut" }, "step8")
       .to(scene.rotation, { x: 0, y: Math.PI, z: 0, duration: 0.3, ease: "power2.out" }, "step8")
-      .to(scene.rotation, { x: 0, y: -Math.PI/49, z: 0, duration: 0.3, ease: "power2.out" }, "step9")
+      .to(scene.rotation, { x: 0, y: Math.PI / 2, z: 0, duration: 0.3, ease: "power2.out" }, "step9")
   }, { dependencies: [scene], revertOnUpdate: true })
+
+
+  const sceneScale = isMobile ? 90 : isTablet ? 120 : 150;
+  const scenePosition = isMobile ? [-4, 0, 22] : isTablet ? [-6, 0, 25] : [-7, 0, 27];
+
+  const butterfly1Scale = isMobile ? 1.3 : isTablet ? 1.8 : 2.3;
+  const butterfly1Position = isMobile ? [-1, 5, 24] : isTablet ? [5, 5, 27] : [12, 3, 30];
+
+  const butterfly2Scale = isMobile ? 1.4 : isTablet ? 1.9 : 2.4;
+  const butterfly2Position = isMobile ? [-7, -4.5, 24] : isTablet ? [-14, -4, 27] : [-20, -2, 30];
+
+  const waterSize = isMobile ? 70 : isTablet ? 100 : 120;
+  const waterResolution = isMobile ? 512 : isTablet ? 768 : 1024;
+  const waterBlur = isMobile ? [150, 80] : isTablet ? [250, 100] : [400, 150];
 
   return (
     <>
-      <primitive object={scene} scale={150} position={[-7, 0, 27]} rotation={[0, Math.PI / 2, 0]} />
+      <primitive
+        object={scene}
+        scale={sceneScale}
+        position={scenePosition}
+        rotation={[0, Math.PI / 2, 0]}
+      />
 
       {!isScrolled && (
         <>
           <primitive
             object={butterflyGLTF.scene}
-            scale={2.3}
-            position={[12, 3, 30]}
+            scale={butterfly1Scale}
+            position={butterfly1Position}
             rotation={[0, -Math.PI / 2, 0]}
           />
 
           <primitive
             object={butterfly2Scene}
-            scale={2.4}
-            position={[-20, -2, 30]}
+            scale={butterfly2Scale}
+            position={butterfly2Position}
             rotation={[0, -Math.PI / 2, 0]}
           />
         </>
       )}
 
-     {!isScrolled && (
-  <group>
-    {/* FIXED WALLPAPER CARD MESH */}
-    <mesh
-      position={[-3, 8, 30]}          
-      rotation={[0, 0, 0]}          
-      receiveShadow
-    >
-      <planeGeometry args={[53, 28]} /> {/* Aspect Ratio fixed for Card Frame */}
-      <meshBasicMaterial 
-        map={textureWallpaper} 
-        side={THREE.DoubleSide} 
-        transparent={true}
-      />  
-    </mesh>
+      {!isScrolled && (
+        <group>
+          <mesh
+            position={[0, 8, 30]}          
+            rotation={[0, 0, 0]}          
+            receiveShadow
+          >
+            <planeGeometry args={[65, 28]} />
+            <meshBasicMaterial 
+              map={textureWallpaper} 
+              side={THREE.DoubleSide} 
+              transparent={true}
+            />  
+          </mesh>  
+          <mesh
+            rotation={[-Math.PI / 2, 0, 0]}
+            position={[0, -5, 0]}
+            receiveShadow
+          >
+            <planeGeometry
+              args={[waterSize, waterSize]}
+            />
 
-    {/* WATER REFLECTOR PLANE */}
-    <mesh
-      rotation={[-Math.PI / 2, 0, 0]}
-      position={[0, -5, 0]}
-      receiveShadow
-    >
-      <planeGeometry args={[120, 120]} />
-      <MeshReflectorMaterial
-        normalMap={normalMap}
-        normalScale={new THREE.Vector2(0.35, 0.35)}
-        blur={[400, 150]}
-        resolution={1024}
-        mirror={0.85}
-        mixBlur={0.7}
-        mixStrength={3.5}
-        roughness={0.1}
-        depthScale={1.5}
-        minDepthThreshold={0.2}
-        maxDepthThreshold={1.2}
-        depthToBlurRatioBias={0.25}
-        color="#79B8D6"
-        metalness={0.15}
-        distortion={0.4}
-      />
-    </mesh>
-  </group> 
-)}
+            <MeshReflectorMaterial
+              normalMap={normalMap}
+              normalScale={new THREE.Vector2(0.35, 0.35)}
+              resolution={waterResolution}
+              mirror={0.85}
+              mixBlur={0.7}
+              mixStrength={3.5}
+              roughness={0.1}
+              depthScale={1.5}
+              minDepthThreshold={0.2}
+              maxDepthThreshold={1.2}
+              depthToBlurRatioBias={0.25}
+              color="#79B8D6"
+              metalness={0.15}
+              distortion={0.4}
+            />
+          </mesh>
+        </group> 
+      )}
     </>
-  )
+  );
 }
 
 export default Scene

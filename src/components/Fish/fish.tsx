@@ -28,7 +28,6 @@ const Fish = () => {
       <div className={`transition-opacity duration-700 ${experienceReady ? "opacity-100" : "opacity-0"}`}>
 <Canvas
   dpr={[1, 2]}
-  shadows
   camera={{ near: 0.1, far: 1000, fov: 45, position: [-4, 1, 0.4], rotation: [0, Math.PI, 0] }}
   gl={{
     antialias: true,
@@ -78,7 +77,7 @@ const Fish = () => {
   />
 
   <Suspense fallback={null}>
-    <Environment preset="forest" environmentIntensity={0.8} />
+    <Environment preset="city" environmentIntensity={0.8} />
     <Scene />
   </Suspense>
 </Canvas>
@@ -91,7 +90,7 @@ const Fish = () => {
         <Section6 />
         <ExpertSection />
         <CTASection />
-        {/* <Section9/> */}
+  
       </div>
     </main>
   );
