@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Navbar from "../navbar/navbar";
 
 export default function Section2() {
   gsap.registerPlugin(ScrollTrigger);
@@ -76,14 +77,15 @@ export default function Section2() {
       ref={sectionRef}
       className="relative w-full h-screen overflow-hidden bg-transparent"
     >
+      <Navbar/>
       {/* Starting me fully Transparent Overlay, scroll par dhire-dhire Black convert hoga */}
       <div
         ref={overlayRef}
-        className="absolute inset-0 z-10 w-full h-full pointer-events-none will-change-colors"
+        className="absolute inset-0  w-full h-full pointer-events-none will-change-colors"
       />
 
       {/* Floating Center Card */}
-      <div className="relative z-20 w-full h-full flex items-center justify-center p-6">
+      <div className="relative w-full h-full flex items-center justify-center p-6">
         <div
           ref={cardRef}
           className="relative h-[85vh] w-[90vw] max-w-6xl overflow-hidden border border-white/20 will-change-transform shadow-2xl"

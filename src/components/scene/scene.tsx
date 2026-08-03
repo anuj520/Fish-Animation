@@ -110,7 +110,7 @@ const Scene = () => {
     const timeline = gsap.timeline({
       scrollTrigger: {
         trigger: "#section-1",
-        endTrigger: "#section-9",
+        endTrigger: "#section-8",
         start: "top top",
         end: "bottom bottom",
         scrub: 0.5,

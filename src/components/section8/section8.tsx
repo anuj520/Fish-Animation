@@ -11,13 +11,13 @@ export default function Section8() {
   gsap.registerPlugin(ScrollTrigger);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const imageWrapperRef = useRef<HTMLDivElement>(null);
+  const videoWrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLElement>(null);
 
   useGSAP(
     () => {
-      if (!containerRef.current || !imageWrapperRef.current) return;
+      if (!containerRef.current || !videoWrapperRef.current) return;
 
       const mainTl = gsap.timeline({
         scrollTrigger: {
@@ -32,7 +32,7 @@ export default function Section8() {
 
       // 1. Video Wrapper Expansion Animation
       mainTl.fromTo(
-        imageWrapperRef.current,
+        videoWrapperRef.current,
         {
           width: "60vw",
           height: "60vh",
@@ -70,18 +70,21 @@ export default function Section8() {
     { scope: containerRef }
   );
 
-  return (
+  return (  
+    <>
     <div
       id="section-8"
       ref={containerRef}
-      className=" -z-10 relative w-full h-screen overflow-hidden font-sans text-white"
+      className="relative w-full h-screen overflow-hidden font-sans text-white -z-10"
     >
       {/* ======================================================== */}
-      {/* INDEPENDENT PARENT 1: BACKGROUND VIDEO ONLY (-z-10)       */}
+      {/* 1. FISH VIDEO CONTAINER (Placed in background via z-10)   */}
       {/* ======================================================== */}
-      <div className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none">
+      <div 
+        className="absolute inset-0 flex items-center justify-center pointer-events-none "
+      >
         <div
-          ref={imageWrapperRef}
+          ref={videoWrapperRef}
           className="relative w-full h-full overflow-hidden shadow-2xl will-change-transform"
         >
           <video
@@ -90,7 +93,7 @@ export default function Section8() {
             loop
             muted
             playsInline
-            className="w-full h-full object-cover object-center brightness-[1.15] contrast-[1.15] saturate-[1.25] filter drop-shadow-[0_0_25px_rgba(255,105,180,0.35)]"
+            className="w-full h-full object-cover object-center brightness-[1.15] contrast-[1.15] saturate-[1.25]"
           />
 
           {/* Dynamic Underwater Light Rays Overlay */}
@@ -101,21 +104,17 @@ export default function Section8() {
         </div>
       </div>
 
+    </div>
+         {/* ======================================================== */}
+      {/* 2. TEXT & CONTENT CONTAINER (Placed on top via z-20)     */}
       {/* ======================================================== */}
-      {/* INDEPENDENT PARENT 2: 3D FISH CANVAS SLOT (z-0)           */}
-      {/* ======================================================== */}
-      <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
-        {/* Render your 3D Fish Canvas Component here */}
-      </div>
-
-      {/* ======================================================== */}
-      {/* INDEPENDENT PARENT 3: TEXT & FOOTER (z-20 Top Layer)     */}
-      {/* ======================================================== */}
-      <div className="relative z-20 w-full h-full flex flex-col justify-between pointer-events-auto">
+      <div 
+        className="absolute inset-0 w-full h-full flex flex-col justify-between pointer-events-auto z-20"
+      >
         {/* CENTER HERO CONTENT */}
         <main
           ref={contentRef}
-          className="mt-auto relative z-20 mb-8 flex flex-col items-center justify-end text-center px-6 pt-28 will-change-transform"
+          className="mt-auto mb-8 flex flex-col items-center justify-end text-center px-6 pt-28 will-change-transform"
         >
           <div className="flex items-center gap-3 mb-3">
             <div className="relative w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
@@ -207,6 +206,6 @@ export default function Section8() {
           </div>
         </footer>
       </div>
-    </div>
+  </>   
   );
 }

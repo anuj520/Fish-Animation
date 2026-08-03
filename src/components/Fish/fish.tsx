@@ -40,6 +40,7 @@ const Fish = () => {
     position: "fixed",
     top: 0,
     left: 0,
+    // zIndex: 1,
     height: "100vh",
     opacity: experienceReady ? 1 : 0,
     transition: "opacity 700ms ease",
