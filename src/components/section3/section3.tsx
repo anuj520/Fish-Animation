@@ -38,7 +38,7 @@ export default function StepsAndFeatures() {
           stepsGridRef.current.children
         );
 
-        stepCards.forEach((card, index) => {
+        stepCards.forEach((card) => {
           const letters = card.querySelectorAll(".kinetic-letter");
 
           const tl = gsap.timeline({
@@ -163,7 +163,7 @@ export default function StepsAndFeatures() {
     <div
       ref={containerRef}
       id="section-3"
-      className="w-full bg-transparent py-20 px-4 md:px-8 font-sans text-white space-y-20 overflow-hidden"
+      className="w-full bg-transparent py-8 md:py-20 px-4 md:px-8 font-sans text-white space-y-10 md:space-y-20 overflow-hidden"
     >
       {/* SECTION 1: 3-STEP PROCESS CARDS */}
       <section
@@ -171,9 +171,10 @@ export default function StepsAndFeatures() {
         className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6"
       >
         {/* Step 1 */}
-        <div className="flex flex-col rounded-3xl bg-[#09051d]/60 backdrop-blur-xl border border-white/10 p-8 shadow-2xl hover:border-white/20 transition-colors duration-300 will-change-transform">
+        <div className="flex flex-col rounded-3xl bg-[#09051d]/60 backdrop-blur-xl border border-white/10 p-6 md:p-8 shadow-2xl hover:border-white/20 transition-colors duration-300 will-change-transform">
           <span className="text-sm font-medium text-gray-400">Step 1</span>
-          <h2 className="text-2xl sm:text-3xl font-semibold mt-1 mb-8 tracking-tight [perspective:800px]">
+          {/* Responsive font size and tracking to prevent awkward word breaks */}
+          <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-1 mb-6 md:mb-8 tracking-tight [perspective:800px]">
             {splitTextToKineticLetters("Tell us About Yourself")}
           </h2>
 
@@ -218,24 +219,24 @@ export default function StepsAndFeatures() {
         </div>
 
         {/* Step 2 */}
-        <div className="flex flex-col rounded-3xl bg-[#09051d]/60 backdrop-blur-xl border border-white/10 p-8 shadow-2xl hover:border-white/20 transition-colors duration-300 will-change-transform">
+        <div className="flex flex-col rounded-3xl bg-[#09051d]/60 backdrop-blur-xl border border-white/10 p-6 md:p-8 shadow-2xl hover:border-white/20 transition-colors duration-300 will-change-transform">
           <span className="text-sm font-medium text-gray-400">Step 2</span>
-          <h2 className="text-2xl sm:text-3xl font-semibold mt-1 mb-8 tracking-tight [perspective:800px]">
+          <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-1 mb-6 md:mb-8 tracking-tight [perspective:800px]">
             {splitTextToKineticLetters("Pick Your Theme")}
           </h2>
 
-          <div className="flex flex-col gap-4 my-auto inner-parallax-item">
-            <div className="rounded-2xl bg-[#120a2e]/70 backdrop-blur-md p-5 border border-white/10 shadow-lg">
+          <div className="flex flex-col gap-3 md:gap-4 my-auto inner-parallax-item">
+            <div className="rounded-2xl bg-[#120a2e]/70 backdrop-blur-md p-4 md:p-5 border border-white/10 shadow-lg">
               <div className="h-1.5 w-16 bg-white/70 rounded-full mb-3" />
               <div className="h-1 w-28 bg-white/20 rounded-full" />
             </div>
 
-            <div className="rounded-2xl bg-[#201548]/80 backdrop-blur-md p-5 border border-purple-500/30 shadow-xl scale-[1.02] transition-transform">
+            <div className="rounded-2xl bg-[#201548]/80 backdrop-blur-md p-4 md:p-5 border border-purple-500/30 shadow-xl scale-[1.02] transition-transform">
               <div className="h-1.5 w-16 bg-white/90 rounded-full mb-3" />
               <div className="h-1 w-32 bg-white/30 rounded-full" />
             </div>
 
-            <div className="rounded-2xl bg-[#120a2e]/70 backdrop-blur-md p-5 border border-white/10 shadow-lg">
+            <div className="rounded-2xl bg-[#120a2e]/70 backdrop-blur-md p-4 md:p-5 border border-white/10 shadow-lg">
               <div className="h-1.5 w-16 bg-white/70 rounded-full mb-3" />
               <div className="h-1 w-24 bg-white/20 rounded-full" />
             </div>
@@ -243,24 +244,18 @@ export default function StepsAndFeatures() {
         </div>
 
         {/* Step 3 */}
-        <div className="flex flex-col rounded-3xl bg-[#09051d]/60 backdrop-blur-xl border border-white/10 p-8 shadow-2xl hover:border-white/20 transition-colors duration-300 will-change-transform">
+        <div className="flex flex-col rounded-3xl bg-[#09051d]/60 backdrop-blur-xl border border-white/10 p-6 md:p-8 shadow-2xl hover:border-white/20 transition-colors duration-300 will-change-transform">
           <span className="text-sm font-medium text-gray-400">Step 3</span>
-          <h2 className="text-2xl sm:text-3xl font-semibold mt-1 mb-8 tracking-tight [perspective:800px]">
+          <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-1 mb-6 md:mb-8 tracking-tight [perspective:800px]">
             {splitTextToKineticLetters("Edit & Launch")}
           </h2>
 
           <div className="relative w-full rounded-2xl overflow-hidden border border-cyan-500/30 bg-[#030614] p-4 flex flex-col justify-between aspect-[4/5] shadow-inner mt-auto inner-parallax-item">
             <div className="flex items-center justify-between text-[10px] text-gray-300 tracking-wider">
-              <span className="font-bold text-white tracking-widest uppercase">
-                VEXEL
-              </span>
               <div className="flex items-center gap-2 opacity-80">
                 <span>ABOUT</span>
                 <span>FEATURES</span>
                 <span>USE CASES</span>
-                <span className="px-1.5 py-0.5 rounded-full border border-white/20 text-[8px]">
-                  GET STARTED ↗
-                </span>
               </div>
             </div>
 
@@ -293,12 +288,12 @@ export default function StepsAndFeatures() {
         className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6"
       >
         {/* Feature Box 1 - Award Winning */}
-        <div className="flex flex-col justify-between rounded-3xl bg-[#a08bfd]/90 backdrop-blur-xl p-8 text-white min-h-[320px] shadow-2xl hover:scale-[1.02] transition duration-300 will-change-transform">
+        <div className="flex flex-col justify-between rounded-3xl bg-[#a08bfd]/90 backdrop-blur-xl p-6 md:p-8 text-white min-h-[280px] md:min-h-[320px] shadow-2xl hover:scale-[1.02] transition duration-300 will-change-transform">
           <div>
             <span className="text-xs font-medium text-white/80 uppercase tracking-wide">
               Award Winning
             </span>
-            <h3 className="text-3xl sm:text-4xl font-semibold mt-2 mb-4 leading-tight [perspective:800px]">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold mt-2 mb-3 md:mb-4 leading-tight [perspective:800px]">
               {splitTextToKineticLetters("4x No-Code Site of the Month")}
             </h3>
             <p className="text-sm text-white/80 font-normal">
@@ -306,7 +301,7 @@ export default function StepsAndFeatures() {
             </p>
           </div>
 
-          <div className="flex items-center justify-between mt-8 pt-4">
+          <div className="flex items-center justify-between mt-6 md:mt-8 pt-4">
             <Link
               href="#"
               className="flex items-center gap-2 text-sm font-semibold hover:opacity-80 transition"
@@ -320,12 +315,12 @@ export default function StepsAndFeatures() {
         </div>
 
         {/* Feature Box 2 - Trend Setting */}
-        <div className="flex flex-col justify-between rounded-3xl bg-[#191338]/80 backdrop-blur-xl border border-white/10 p-8 text-white min-h-[320px] shadow-2xl hover:scale-[1.02] transition duration-300 will-change-transform">
+        <div className="flex flex-col justify-between rounded-3xl bg-[#191338]/80 backdrop-blur-xl border border-white/10 p-6 md:p-8 text-white min-h-[280px] md:min-h-[320px] shadow-2xl hover:scale-[1.02] transition duration-300 will-change-transform">
           <div>
             <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
               Trend Setting
             </span>
-            <h3 className="text-3xl sm:text-4xl font-semibold mt-2 mb-4 leading-tight [perspective:800px]">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold mt-2 mb-3 md:mb-4 leading-tight [perspective:800px]">
               {splitTextToKineticLetters("Top Web Design Trend 2025")}
             </h3>
             <p className="text-sm text-gray-300 font-normal">
@@ -333,7 +328,7 @@ export default function StepsAndFeatures() {
             </p>
           </div>
 
-          <div className="flex items-center justify-between mt-8 pt-4">
+          <div className="flex items-center justify-between mt-6 md:mt-8 pt-4">
             <Link
               href="#"
               className="flex items-center gap-2 text-sm font-semibold hover:opacity-80 transition"
@@ -347,12 +342,12 @@ export default function StepsAndFeatures() {
         </div>
 
         {/* Feature Box 3 - Scalable */}
-        <div className="flex flex-col justify-between rounded-3xl bg-[#191338]/80 backdrop-blur-xl border border-white/10 p-8 text-white min-h-[320px] shadow-2xl hover:scale-[1.02] transition duration-300 will-change-transform">
+        <div className="flex flex-col justify-between rounded-3xl bg-[#191338]/80 backdrop-blur-xl border border-white/10 p-6 md:p-8 text-white min-h-[280px] md:min-h-[320px] shadow-2xl hover:scale-[1.02] transition duration-300 will-change-transform">
           <div>
             <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">
               Scalable
             </span>
-            <h3 className="text-3xl sm:text-4xl font-semibold mt-2 mb-4 leading-tight [perspective:800px]">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold mt-2 mb-3 md:mb-4 leading-tight [perspective:800px]">
               {splitTextToKineticLetters("Trusted by the Best")}
             </h3>
             <p className="text-sm text-gray-300 font-normal">
@@ -361,7 +356,7 @@ export default function StepsAndFeatures() {
             </p>
           </div>
 
-          <div className="flex items-center justify-between mt-8 pt-4">
+          <div className="flex items-center justify-between mt-6 md:mt-8 pt-4">
             <Link
               href="#"
               className="flex items-center gap-2 text-sm font-semibold hover:opacity-80 transition"

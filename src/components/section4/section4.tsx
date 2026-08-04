@@ -62,13 +62,13 @@ export default function ShowcaseSection() {
           rotateX: 0,
           scale: 1,
           filter: "blur(0px)",
-          stagger: 0.03, // Every letter animates sequentially
+          stagger: 0.03,
           ease: "back.out(1.7)",
           scrollTrigger: {
             trigger: headingRef.current,
             start: "top 85%",
             end: "top 35%",
-            scrub: 1, // Smooth scrub scrolling control
+            scrub: 1,
           },
         }
       );
@@ -119,18 +119,18 @@ export default function ShowcaseSection() {
   );
 
   return (
-    <section
+ <section
       ref={sectionRef}
       id="section-4"
-      className="relative w-full bg-black/50 text-white py-24 px-6 md:px-12 font-sans overflow-hidden"
+      className="relative w-full bg-black/50 text-white pt-6 pb-12 md:py-24 px-4 md:px-12 font-sans overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto space-y-16">
+      <div className="max-w-7xl mx-auto space-y-10 md:space-y-16">
         {/* Main Heading & Action Buttons */}
-        <div className="max-w-4xl space-y-8">
+        <div className="max-w-4xl space-y-6 md:space-y-8">
           {/* Letter Animation Heading */}
           <h2
             ref={headingRef}
-            className="text-4xl sm:text-6xl font-semibold tracking-tight leading-[1.15] [perspective:1000px]"
+            className="text-3xl sm:text-5xl md:text-6xl font-semibold tracking-tight leading-[1.15] [perspective:1000px]"
           >
             <span className="block">
               {splitTextToLetters("Launch your Visually")}
@@ -143,13 +143,13 @@ export default function ShowcaseSection() {
             </span>
           </h2>
 
-          <div ref={buttonGroupRef} className="flex items-center gap-4 pt-2">
-            <button className="rounded-full bg-white/10 px-6 py-3 text-sm font-medium border border-white/20 backdrop-blur-md hover:bg-white/20 transition">
+          <div ref={buttonGroupRef} className="flex flex-wrap items-center gap-3 md:gap-4 pt-2">
+            <button className="rounded-full bg-white/10 px-5 py-2.5 md:px-6 md:py-3 text-xs md:text-sm font-medium border border-white/20 backdrop-blur-md hover:bg-white/20 transition">
               Talk to Us
             </button>
             <Link
               href="/browse"
-              className="rounded-full bg-white text-black px-6 py-3 text-sm font-semibold hover:bg-gray-200 transition"
+              className="rounded-full bg-white text-black px-5 py-2.5 md:px-6 md:py-3 text-xs md:text-sm font-semibold hover:bg-gray-200 transition"
             >
               Browse 3D Websites
             </Link>
@@ -159,7 +159,7 @@ export default function ShowcaseSection() {
         {/* Showcase Grid */}
         <div
           ref={gridRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 pt-4 md:pt-6"
         >
           {showcases.map((item) => (
             <div

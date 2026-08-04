@@ -25,6 +25,7 @@ export default function Section1() {
       )
         return;
 
+      // 1st code ki exact animation timeline aur triggers
       const mainTl = gsap.timeline({
         scrollTrigger: {
           trigger: secondBoxRef.current,
@@ -78,7 +79,7 @@ export default function Section1() {
     <main
       id="section-1"
       ref={containerRef}
-      className="relative w-full min-h-[160vh] overflow-x-hidden overflow-y-hidden"
+      className="relative w-full min-h-[120svh] md:min-h-[160vh] overflow-x-hidden overflow-y-hidden"
     >
       {/* SMOOTH BLACK OVERLAY LAYER */}
       <div
@@ -100,7 +101,7 @@ export default function Section1() {
         {/* HERO MAIN CONTENT */}
         <main
           ref={heroContentRef}
-          className="relative z-10 min-h-screen max-w-7xl mx-auto px-4 sm:px-8 pb-12 pt-28 sm:pt-32 flex flex-col justify-end will-change-transform"
+          className="relative z-10 min-h-[85svh] md:min-h-screen max-w-7xl mx-auto px-4 sm:px-8 pb-12 pt-28 sm:pt-32 flex flex-col justify-end will-change-transform"
         >
           <div className="max-w-2xl space-y-4 sm:space-y-5 mb-8">
             <h1 className="text-3xl xs:text-4xl sm:text-6xl md:text-7xl leading-[1.1] tracking-tight font-bold">
@@ -127,7 +128,7 @@ export default function Section1() {
         {/* SECOND BOX */}
         <div
           ref={secondBoxRef}
-          className="relative z-10 min-h-[50vh] sm:h-[60vh] flex items-center justify-center will-change-transform"
+          className="relative z-10 min-h-[35svh] sm:min-h-[50vh] md:h-[60vh] flex items-center justify-center will-change-transform"
         >
           <div className="relative flex items-end justify-end w-full h-full overflow-hidden">
             <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-12 md:px-16 pb-12">

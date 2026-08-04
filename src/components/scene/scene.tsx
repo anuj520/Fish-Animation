@@ -110,7 +110,7 @@ const Scene = () => {
     const timeline = gsap.timeline({
       scrollTrigger: {
         trigger: "#section-1",
-        endTrigger: "#section-8",
+        endTrigger: "#section-9",
         start: "top top",
         end: "bottom bottom",
         scrub: 0.5,
@@ -150,7 +150,11 @@ const Scene = () => {
 
   const waterSize = isMobile ? 70 : isTablet ? 100 : 120;
   const waterResolution = isMobile ? 512 : isTablet ? 768 : 1024;
-  const waterBlur = isMobile ? [150, 80] : isTablet ? [250, 100] : [400, 150];
+const waterPosition: [number, number, number] = isMobile 
+    ? [0, -3, 0] 
+    : isTablet 
+    ? [0, -5, 0] 
+    : [0, -5, 0];
 
   return (
     <>
@@ -195,7 +199,7 @@ const Scene = () => {
           </mesh>  
           <mesh
             rotation={[-Math.PI / 2, 0, 0]}
-            position={[0, -5, 0]}
+            position={waterPosition}
             receiveShadow
           >
             <planeGeometry

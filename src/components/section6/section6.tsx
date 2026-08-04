@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react'
 import CircularGallery from './cardSwap'
 
@@ -5,7 +7,8 @@ const Section6 = () => {
   return (
     <div
       id="section-6"
-      className="relative w-full h-[280px] sm:h-[360px] md:h-[450px] lg:h-[550px] overflow-hidden"
+      // Mobile par height ko compact aur responsive kar diya hai
+      className="relative w-full h-[240px] sm:h-[320px] md:h-[420px] lg:h-[550px] overflow-hidden py-4 md:py-0"
     >
       <CircularGallery
         bend={1}

@@ -22,7 +22,7 @@ const useCases = [
     description:
       "Leverage WebGL visuals and high-performance, best-in-class 3D websites to elevate your online presence—no code required.",
     link: "#",
-    offsetClass: "mt-12 md:mt-20",
+    offsetClass: "mt-0 md:mt-20",
   },
   {
     id: "creative",
@@ -30,7 +30,7 @@ const useCases = [
     description:
       "Craft creative, captivating 3D websites with drag-and-drop tools and keyframe animations to wow every visitor.",
     link: "#",
-    offsetClass: "mt-20 md:mt-40",
+    offsetClass: "mt-0 md:mt-40",
   },
   {
     id: "storytelling",
@@ -38,7 +38,7 @@ const useCases = [
     description:
       "Bring your vision to life with scroll triggered 3D scenes and interactive animations that keep users engaged.",
     link: "#",
-    offsetClass: "mt-28 md:mt-60",
+    offsetClass: "mt-0 md:mt-60",
   },
 ];
 
@@ -76,7 +76,7 @@ export default function UseCasesSection() {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: card,
-            start: "top 90%",
+            start: "top 88%",
             end: "top 40%",
             scrub: 1.2, // Smooth scroll sync
           },
@@ -86,10 +86,10 @@ export default function UseCasesSection() {
         tl.fromTo(
           card,
           {
-            y: 120 + i * 20,
+            y: 80 + i * 15,
             opacity: 0,
-            scale: 0.88,
-            rotateY: i % 2 === 0 ? -12 : 12, // Alternating 3D angle entry
+            scale: 0.9,
+            rotateY: i % 2 === 0 ? -10 : 10,
             transformPerspective: 1000,
           },
           {
@@ -113,10 +113,10 @@ export default function UseCasesSection() {
           letters,
           {
             opacity: 0,
-            y: 30,
-            rotateZ: (index) => (index % 2 === 0 ? -18 : 18), // Fan-out angle
+            y: 25,
+            rotateZ: (index: number) => (index % 2 === 0 ? -15 : 15),
             scale: 0.5,
-            filter: "blur(8px)",
+            filter: "blur(6px)",
           },
           {
             opacity: 1,
@@ -124,8 +124,8 @@ export default function UseCasesSection() {
             rotateZ: 0,
             scale: 1,
             filter: "blur(0px)",
-            stagger: 0.04, // Stagger wave speed
-            ease: "back.out(2)", // Bouncy overshoot effect
+            stagger: 0.03,
+            ease: "back.out(2)",
           },
           0.15
         );
@@ -138,39 +138,40 @@ export default function UseCasesSection() {
     <section
       ref={containerRef}
       id="section-5"
-      className="relative w-full bg-transparent py-24 px-4 md:px-8 font-sans text-white overflow-hidden"
+      // Mobile par top gap hatane ke liye pt-4 aur pb-10 kar diya hai
+      className="relative w-full bg-transparent pt-4 pb-10 md:py-24 px-4 md:px-8 font-sans text-white overflow-hidden"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
         {useCases.map((card) => (
           <div
             key={card.id}
-            className={`usecase-card flex flex-col justify-between rounded-3xl bg-[#080518]/80 backdrop-blur-xl border border-white/10 p-7 min-h-[380px] shadow-2xl hover:border-cyan-500/40 transition-colors duration-500 will-change-transform transform-gpu ${card.offsetClass}`}
+            className={`usecase-card flex flex-col justify-between rounded-3xl bg-[#080518]/80 backdrop-blur-xl border border-white/10 p-6 md:p-7 min-h-[320px] md:min-h-[380px] shadow-2xl hover:border-cyan-500/40 transition-colors duration-500 will-change-transform transform-gpu ${card.offsetClass}`}
           >
             {/* Card Content */}
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {/* Cyan Tag Badge */}
               <div>
-                <span className="usecase-badge inline-block text-[11px] font-semibold tracking-wider text-cyan-400 bg-cyan-950/60 border border-cyan-500/30 px-3 py-1 rounded-full uppercase">
+                <span className="usecase-badge inline-block text-[10px] md:text-[11px] font-semibold tracking-wider text-cyan-400 bg-cyan-950/60 border border-cyan-500/30 px-3 py-1 rounded-full uppercase">
                   USE CASE
                 </span>
               </div>
 
               {/* Title with Letter-by-Letter Wave Animation */}
-              <h3 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white pt-1 [perspective:800px]">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-white pt-1 [perspective:800px]">
                 {splitTextToKineticLetters(card.title)}
               </h3>
 
               {/* Description */}
-              <p className="usecase-desc text-sm text-gray-300 font-normal leading-relaxed pt-1">
+              <p className="usecase-desc text-xs md:text-sm text-gray-300 font-normal leading-relaxed pt-1">
                 {card.description}
               </p>
             </div>
 
             {/* Bottom Link Action */}
-            <div className="pt-8">
+            <div className="pt-6 md:pt-8">
               <Link
                 href={card.link}
-                className="usecase-link inline-flex items-center gap-2 text-sm font-medium text-white hover:text-cyan-400 transition-colors group"
+                className="usecase-link inline-flex items-center gap-2 text-xs md:text-sm font-medium text-white hover:text-cyan-400 transition-colors group"
               >
                 <span>Explore Now</span>
                 <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />

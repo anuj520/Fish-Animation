@@ -32,9 +32,21 @@ export const ScrollProvider = ({ children }: ScrollProviderProps) => {
 
     const handleScroll = () => {
       const currentScroll = window.scrollY;
+      const screenWidth = window.innerWidth;
 
       setScrollY(currentScroll);
-      setIsScrolled(currentScroll > 1000);
+
+      // Screen size ke mutabiq dynamic threshold condition
+      if (screenWidth < 768) {
+        // Mobile view
+        setIsScrolled(currentScroll > 350);
+      } else if (screenWidth < 1024) {
+        // Tablet view
+        setIsScrolled(currentScroll > 600);
+      } else {
+        // PC / Desktop view
+        setIsScrolled(currentScroll > 800);
+      }
     };
 
     window.addEventListener("scroll", handleScroll);

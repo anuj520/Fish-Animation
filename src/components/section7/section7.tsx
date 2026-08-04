@@ -132,7 +132,7 @@ export default function ExpertSection() {
         );
       }
 
-      // 4. Bottom Cards (Fixed trigger bounds so -mt-14 works)
+      // 4. Bottom Cards
       if (cardsRef.current) {
         const cards = gsap.utils.toArray<HTMLElement>(
           cardsRef.current.children
@@ -154,7 +154,7 @@ export default function ExpertSection() {
             ease: "power2.out",
             scrollTrigger: {
               trigger: cardsRef.current,
-              start: "top 95%", // Adjusted start so negative margin doesn't break trigger bounds
+              start: "top 95%",
               end: "top 60%",
               scrub: 1,
             },
@@ -169,13 +169,14 @@ export default function ExpertSection() {
     <div
       ref={containerRef}
       id="section-7"
-      className="relative min-h-screen w-full font-sans text-white bg-black/50 overflow-hidden py-8 sm:py-12"
+      // Mobile par top gap hatane ke liye pt-4 aur py ko optimize kiya hai
+      className="relative min-h-screen w-full font-sans text-white bg-black/50 overflow-hidden pt-4 pb-8 sm:py-12"
     >
       {/* Glow effect */}
       <div className="absolute top-1/4 right-1/4 w-72 h-72 sm:w-96 sm:h-96 bg-blue-600/10 rounded-full blur-[100px] sm:blur-[120px] pointer-events-none" />
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 pt-8 sm:pt-12 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-6 lg:gap-8 mb-8 sm:mb-16">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 pt-4 sm:pt-12 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-6 lg:gap-8 mb-6 sm:mb-16">
           {/* Left Hero Typography */}
           <div className="space-y-4 sm:space-y-6 text-center lg:text-left">
             <h1
@@ -204,7 +205,7 @@ export default function ExpertSection() {
           {/* Right 3D Model Canvas */}
           <div
             ref={visualRef}
-            className="relative h-[320px] sm:h-[450px] lg:h-[550px] w-full flex items-center justify-center will-change-transform pointer-events-none z-10"
+            className="relative h-[280px] sm:h-[450px] lg:h-[550px] w-full flex items-center justify-center will-change-transform pointer-events-none z-10"
           >
             <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
               <ambientLight intensity={1.5} />

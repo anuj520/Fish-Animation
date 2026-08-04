@@ -7,6 +7,29 @@ import Image from "next/image";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Scroll position detect karne ke liye
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScroll = window.scrollY;
+      const screenWidth = window.innerWidth;
+
+      // Screen size ke mutabiq threshold condition
+      if (screenWidth < 768) {
+        setIsScrolled(currentScroll > 500);
+      } else if (screenWidth < 1024) {
+        setIsScrolled(currentScroll > 700);
+      } else {
+        setIsScrolled(currentScroll > 800);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -23,7 +46,13 @@ export default function Navbar() {
   return (
     <>
       {/* 1. FIXED HEADER */}
-      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 md:px-8 py-4 sm:py-6 max-w-7xl mx-auto">
+   <header
+      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-6 md:px-8 py-2.5 sm:py-4 max-w-7xl mx-auto transition-all duration-300 ${
+        isScrolled
+          ? "bg-black/10 backdrop-blur-md border-b rounded-br-2xl rounded-bl-2xl border-white/10 shadow-lg"
+          : "bg-transparent"
+      }`}
+      >
         <Link
           href="/"
           className="flex items-center gap-2 sm:gap-2.5 text-xl sm:text-2xl font-bold tracking-tight group"
@@ -74,7 +103,7 @@ export default function Navbar() {
           {/* Hamburger Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden cursor-pointer  p-2 rounded-full bg-black/20 border border-white/15 text-white backdrop-blur-md focus:outline-none"
+            className="md:hidden cursor-pointer p-2 rounded-full bg-black/20 border border-white/15 text-white backdrop-blur-md focus:outline-none"
             aria-label="Open Menu"
           >
             <Menu className="w-5 h-5" />
