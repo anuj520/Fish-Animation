@@ -68,7 +68,7 @@ export default function Navbar() {
             />
           </div>
           <span className="text-white tracking-wide transition-opacity group-hover:opacity-90">
-            Academy X
+            Fish
           </span>
         </Link>
 

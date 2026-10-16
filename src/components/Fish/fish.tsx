@@ -73,12 +73,12 @@ const Fish = () => {
     position={[0, 2, 25]}
     intensity={12}
     distance={35}
-    color="#ffffff"
+    color="#000"
     decay={2}
   />
 
   <Suspense fallback={null}>
-    <Environment preset="city" environmentIntensity={0.8} />
+    <Environment preset="sunset" environmentIntensity={0.8} />
     <Scene />
   </Suspense>
 </Canvas>

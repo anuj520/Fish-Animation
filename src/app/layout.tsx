@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Academy X",
+  title: "fish",
   description: "Create 3D website",
 };
 

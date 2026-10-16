@@ -136,7 +136,7 @@ export default function Section8() {
           </div>
 
           <span className="text-lg md:text-3xl font-bold tracking-wide text-white drop-shadow-md">
-            Academy X
+          Fish
           </span>
         </div>
 
